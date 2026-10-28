@@ -129,12 +129,10 @@ const rounds=[
       [
         "S1 10/22 3:30p",
         {
-          "name": "Ferguson",
-          "pending": true
+          "name": "Ferguson", "result": "winner"
         },
         {
-          "name": "Kristi",
-          "pending": true
+          "name": "Kristi", "result": "loser"
         }
       ],
       [
@@ -155,12 +153,10 @@ const rounds=[
       [
         "Final",
         {
-          "name": "Winner S1",
-          "pending": true
+          "name": "Ferguson", "result": "winner"
         },
         {
-          "name": "Adam",
-          "pending": true
+          "name": "Adam", "result": "loser"
         }
       ]
     ]

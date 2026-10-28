@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favre Dollar Footlong - League Hub</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f5f7;
+            color: #2a2a2a;
+            margin: 0;
+            padding: 16px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Brand Header */
+        .brand-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border-left: 10px solid #8b0000;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+            border-top: 1px solid #e1e4e8;
+            border-right: 1px solid #e1e4e8;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-logo {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .header-title {
+            margin: 0;
+            font-size: 22px;
+            color: #2a2a2a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .week-badge {
+            font-size: 13px;
+            color: #ffffff;
+            font-weight: 700;
+            background-color: #8b0000;
+            padding: 6px 14px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Typography & Layout Shared */
+        .section-container {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            text-transform: uppercase;
+            color: #8b0000;
+            margin: 0 0 10px 0;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        /* Matchup Section */
+        .matchup-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .matchup-card {
+            background-color: #ffffff;
+            border-radius: 6px;
+            padding: 10px 14px;
+            border: 1px solid #e1e4e8;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .team-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #666666;
+        }
+
+        .team-row:first-child {
+            margin-bottom: 6px;
+        }
+
+        .team-row.winner {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .team-row.winner .team-name {
+            color: #2a2a2a;
+        }
+
+        .team-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .team-logo {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        .team-name {
+            font-size: 14px;
+        }
+
+        .team-score {
+            font-size: 15px;
+        }
+
+        /* Standings Section */
+        .standings-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .division-card {
+            background-color: #ffffff;
+            border-radius: 6px;
+            border: 1px solid #e1e4e8;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .division-header {
+            background-color: #2a2a2a;
+            color: #ffffff;
+            padding: 8px 12px;
+            font-weight: bold;
+            font-size: 13px;
+            text-transform: uppercase;
+            border-bottom: 3px solid #8b0000;
+        }
+
+        .standings-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .standings-table th {
+            padding: 6px 8px;
+            background-color: #f9fafb;
+            color: #666666;
+            text-align: left;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .standings-table th.col-w, 
+        .standings-table th.col-l {
+            padding: 6px 4px;
+            text-align: center;
+            width: 25px;
+        }
+
+        .standings-table th.col-pf {
+            text-align: right;
+            width: 50px;
+        }
+
+        .standings-table td {
+            padding: 6px 8px;
+        }
+
+        .standings-table tr.non-playoff {
+            color: #666666;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .standings-table tr.non-playoff:last-child {
+            border-bottom: none;
+        }
+
+        .standings-table tr.playoff {
+            background-color: #fff0f0;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .standings-table tr.playoff .team-cell {
+            font-weight: 600;
+            color: #2a2a2a;
+        }
+
+        .seed-badge {
+            font-size: 9px;
+            background-color: #8b0000;
+            color: #fff;
+            padding: 1px 4px;
+            border-radius: 2px;
+            margin-left: 2px;
+        }
+
+        .cell-center {
+            padding: 6px 4px;
+            text-align: center;
+        }
+
+        .cell-right {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <header class="brand-header">
+            <div class="header-left">
+                <img src="CS_Reverse_Red.png" alt="Cousins Subs Logo" class="header-logo">
+                <h1 class="header-title">Favre Dollar Footlong</h1>
+            </div>
+<!--            <span class="week-badge">Week 1</span> -->
+        </header>
+
+        <section class="section-container">
+
+<h2 class="section-title">Week 9 Matchups</h2> <!-- ======================================================================================= CURRENT WEEK -->
+            
+			
+<!-- 
+====================================================================================================================================================== Team Logos
+
+Ferguson: https://g.espncdn.com/lm-static/ffl/images/default_logos/19.svg
+
+Westhoff: darthvader.png
+
+Somoles: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqTymrY9PUHsSRcZ-H7M1M0xbtvxTnf2Pk2blei9mAOIKPlzeeVYwvES9_&s=10
+
+Levetzow: https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-01.svg
+
+Prusha: https://g.espncdn.com/lm-static/logo-packs/ffl/ShieldsOfGlory-LDopa/ShieldsOfGlory-06.svg
+
+Gogin: https://g.espncdn.com/lm-static/logo-packs/ffl/8bitHeros-JoeyEllis/8bit_football-04.svg
+
+Laabs: https://www.clipartmax.com/png/middle/232-2320842_image-espn-fantasy-sports-logo.png
+
+Klopp: https://preview.redd.it/i-heard-someone-was-looking-for-me-v0-s7av7vw6anfe1.jpeg?auto=webp&s=c2d1586e2839f4d6aaa0309263f9a45f824f9784
+
+Cholka: https://upload.wikimedia.org/wikipedia/en/b/b1/Wisconsin_State_Fair_Logo.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original
+
+Grube: maizeandcheese.png
+
+Tracy: https://g.espncdn.com/lm-static/logo-packs/ffl/Referee-MartinLaksman/referee-14.svg
+
+-->			
+            <div class="matchup-grid">
+
+				<!-- MATCHUP NUMBER 1 -->
+				
+				
+                <div class="matchup-card">
+                    <div class="team-row"> <!-- add " winner" to class for winner-->
+						<div class="team-info">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Dallas_Cowboys.svg/1280px-Dallas_Cowboys.svg.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=thumbnail" alt="Logo" class="team-logo">
+                            <span class="team-name">Bautch - Jerry's Kids (5-9)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>                    
+					
+					<div class="team-row">
+                        <div class="team-info">
+							<img src="darthvader.png" alt="Logo" class="team-logo">
+                            <span class="team-name">Westhoff - Legion of Doom (9-5)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+
+                </div>
+				
+				
+								<!-- MATCHUP NUMBER 2 -->
+
+                <div class="matchup-card">
+					<div class="team-row"> <!-- add " winner" to class for winner-->
+					<div class="team-info">
+							<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqTymrY9PUHsSRcZ-H7M1M0xbtvxTnf2Pk2blei9mAOIKPlzeeVYwvES9_&s=10" alt="Logo" class="team-logo">
+                            <span class="team-name">Somoles - Should I Stay or Shedeur Go<br>(8-6)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+
+					<div class="team-row">
+						<div class="team-info">
+						<img src="https://g.espncdn.com/lm-static/logo-packs/ffl/Referee-MartinLaksman/referee-14.svg" alt="Logo" class="team-logo">
+                            <span class="team-name">Tracy - Snap, Sack, Slayyy (6-8)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+				</div>
+
+                </div>
+				
+				
+				
+								<!-- MATCHUP NUMBER 3 -->
+				
+				
+
+                <div class="matchup-card">
+					<div class="team-row"> <!-- add " winner" to class for winner-->
+						<div class="team-info">
+                            <img src="https://g.espncdn.com/lm-static/logo-packs/ffl/ShieldsOfGlory-LDopa/ShieldsOfGlory-06.svg" alt="Logo" class="team-logo">
+                            <span class="team-name">Prusha - Chop Blockers (8-6)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+					
+										<div class="team-row"> <!-- add " winner" to class for winner-->
+                        <div class="team-info">
+							<img src="maizeandcheese.png" alt="Logo" class="team-logo">
+                            <span class="team-name">Grube - Maize and Cheese (8-6)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+
+					
+
+				</div>
+				
+				
+								<!-- MATCHUP NUMBER 4 -->
+				
+				
+
+                <div class="matchup-card">
+					<div class="team-row"> <!-- add " winner" to class for winner-->
+                        <div class="team-info">
+                            <img src="https://g.espncdn.com/lm-static/ffl/images/default_logos/19.svg" alt="Logo" class="team-logo">
+                            <span class="team-name">Ferguson - Team Ferguson (8-6)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+
+					<div class="team-row">
+                        <div class="team-info">
+							<img src="https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-01.svg" alt="Logo" class="team-logo">
+                            <span class="team-name">Levetzow - Levetzow (8-6)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+					
+                </div>
+				
+				
+				
+								<!-- MATCHUP NUMBER 5 -->
+				
+				
+
+                <div class="matchup-card">
+					<div class="team-row"> <!-- add " winner" to class for winner-->
+					<div class="team-info">
+							<img src="https://upload.wikimedia.org/wikipedia/en/b/b1/Wisconsin_State_Fair_Logo.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original" alt="Logo" class="team-logo">
+                            <span class="team-name">Cholka - Stallis Proud (5-9)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+					
+					
+					<div class="team-row">
+					<div class="team-info">
+                            <img src="https://www.clipartmax.com/png/middle/232-2320842_image-espn-fantasy-sports-logo.png" alt="Logo" class="team-logo">
+                            <span class="team-name">Laabs - T's Wildcards (7-7)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+
+                </div>
+				
+				
+				
+								<!-- MATCHUP NUMBER 6 -->
+				
+				
+				
+
+                <div class="matchup-card">
+					<div class="team-row"> <!-- add " winner" to class for winner-->
+                        <div class="team-info">
+							<img src="https://preview.redd.it/i-heard-someone-was-looking-for-me-v0-s7av7vw6anfe1.jpeg?auto=webp&s=c2d1586e2839f4d6aaa0309263f9a45f824f9784" alt="Logo" class="team-logo">
+                            <span class="team-name">Klopp - Motor City Coney Rats (5-9)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+
+					<div class="team-row"> <!-- add " winner" to class for winner-->
+                        <div class="team-info">
+                            <img src="https://g.espncdn.com/lm-static/logo-packs/ffl/8bitHeros-JoeyEllis/8bit_football-04.svg" alt="Logo" class="team-logo">
+                            <span class="team-name">Gogin - All You Need is LOVE (7-7)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+
+				</div>
+
+            </div>
+			
+			
+			
+		</section>
+			
+			
+			
+			
+        <section class="section-container">
+			
+            <h2 class="section-title">Week 8 Matchups</h2> <!-- ======================================================================================= PREVIOUS WEEK -->
+            
+			
+<!-- 
+====================================================================================================================================================== Team Logos
+
+Ferguson: https://g.espncdn.com/lm-static/ffl/images/default_logos/19.svg
+
+Westhoff: darthvader.png
+
+Somoles: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqTymrY9PUHsSRcZ-H7M1M0xbtvxTnf2Pk2blei9mAOIKPlzeeVYwvES9_&s=10
+
+Levetzow: https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-01.svg
+
+Prusha: https://g.espncdn.com/lm-static/logo-packs/ffl/ShieldsOfGlory-LDopa/ShieldsOfGlory-06.svg
+
+Gogin: https://g.espncdn.com/lm-static/logo-packs/ffl/8bitHeros-JoeyEllis/8bit_football-04.svg
+
+Laabs: https://www.clipartmax.com/png/middle/232-2320842_image-espn-fantasy-sports-logo.png
+
+Klopp: https://preview.redd.it/i-heard-someone-was-looking-for-me-v0-s7av7vw6anfe1.jpeg?auto=webp&s=c2d1586e2839f4d6aaa0309263f9a45f824f9784
+
+Cholka: https://upload.wikimedia.org/wikipedia/en/b/b1/Wisconsin_State_Fair_Logo.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original
+
+Grube: maizeandcheese.png
+
+Tracy: https://g.espncdn.com/lm-static/logo-packs/ffl/Referee-MartinLaksman/referee-14.svg
+
+-->			
+            <div class="matchup-grid">
+
+				<!-- MATCHUP NUMBER 1 -->
+				
+				
+                <div class="matchup-card">
+                    <div class="team-row"> <!-- add " winner" to class for winner-->
+						<div class="team-info">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Dallas_Cowboys.svg/1280px-Dallas_Cowboys.svg.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=thumbnail" alt="Logo" class="team-logo">
+                            <span class="team-name">Bautch - Jerry's Kids (5-9)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>                    
+					
+					<div class="team-row">
+					<div class="team-info">
+                            <img src="https://g.espncdn.com/lm-static/logo-packs/ffl/CreepShow-ToddDetwiler/CreepShow-01.svg" alt="Logo" class="team-logo">
+                            <span class="team-name">Levetzow - Levetzow (8-6)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+                </div>
+				
+				
+								<!-- MATCHUP NUMBER 2 -->
+				
+			
+				
+
+                <div class="matchup-card">
+					<div class="team-row"> <!-- add " winner" to class for winner-->
+                        <div class="team-info">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqTymrY9PUHsSRcZ-H7M1M0xbtvxTnf2Pk2blei9mAOIKPlzeeVYwvES9_&s=10" alt="Logo" class="team-logo">
+                            <span class="team-name">Somoles - Should I Stay or Shedeur Go<br>(8-6)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+					<div class="team-row">
+						<div class="team-info">
+                            <img src="https://upload.wikimedia.org/wikipedia/en/b/b1/Wisconsin_State_Fair_Logo.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original" alt="Logo" class="team-logo">
+                            <span class="team-name">Cholka - Stallis Proud (5-9)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+				</div>
+
+                </div>
+				
+				
+				
+								<!-- MATCHUP NUMBER 3 -->
+				
+				
+
+                <div class="matchup-card">
+                    <div class="team-row"> <!-- add " winner" to class for winner-->
+						<div class="team-info">
+                            <img src="https://g.espncdn.com/lm-static/logo-packs/ffl/ShieldsOfGlory-LDopa/ShieldsOfGlory-06.svg" alt="Logo" class="team-logo">
+                            <span class="team-name">Prusha - Chop Blockers (8-6)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+					
+					<div class="team-row">
+                        <div class="team-info">
+                            <img src="https://preview.redd.it/i-heard-someone-was-looking-for-me-v0-s7av7vw6anfe1.jpeg?auto=webp&s=c2d1586e2839f4d6aaa0309263f9a45f824f9784" alt="Logo" class="team-logo">
+                            <span class="team-name">Klopp - Motor City Coney Rats (5-9)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+                </div>
+				
+				
+								<!-- MATCHUP NUMBER 4 -->
+				
+				
+
+                <div class="matchup-card">
+					<div class="team-row">
+                        <div class="team-info">
+                            <img src="https://g.espncdn.com/lm-static/ffl/images/default_logos/19.svg" alt="Logo" class="team-logo">
+                            <span class="team-name">Ferguson - Team Ferguson (8-2)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+                    <div class="team-row"> <!-- add " winner" to class for winner-->
+					<div class="team-info">
+                            <img src="darthvader.png" alt="Logo" class="team-logo">
+                            <span class="team-name">Westhoff - Legion of Doom (9-5)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+
+					
+                </div>
+				
+				
+				
+								<!-- MATCHUP NUMBER 5 -->
+				
+				
+
+                <div class="matchup-card">
+                    <div class="team-row"> <!-- add " winner" to class for winner-->
+                        <div class="team-info">
+                            <img src="maizeandcheese.png" alt="Logo" class="team-logo">
+                            <span class="team-name">Grube - Maize and Cheese (8-6)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+
+					<div class="team-row">
+                        <div class="team-info">
+                            <img src="https://www.clipartmax.com/png/middle/232-2320842_image-espn-fantasy-sports-logo.png" alt="Logo" class="team-logo">
+                            <span class="team-name">Laabs - T's Wildcards (7-7)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+                </div>
+				
+				
+				
+								<!-- MATCHUP NUMBER 6 -->
+				
+				
+				
+
+                <div class="matchup-card">
+					<div class="team-row">
+                        <div class="team-info">
+                            <img src="https://g.espncdn.com/lm-static/logo-packs/ffl/Referee-MartinLaksman/referee-14.svg" alt="Logo" class="team-logo">
+                            <span class="team-name">Tracy - Snap, Sack, Slayyy (6-8)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+                    <div class="team-row"> <!-- add " winner" to class for winner-->
+					<div class="team-info">
+                            <img src="https://g.espncdn.com/lm-static/logo-packs/ffl/8bitHeros-JoeyEllis/8bit_football-04.svg" alt="Logo" class="team-logo">
+                            <span class="team-name">Gogin - All You Need is LOVE (7-7)</span>
+                        </div>
+                        <span class="team-score">0.0</span>
+                    </div>
+
+					</div>
+
+            </div>
+			
+			
+			
+        </section>
+		
+		
+		
+						<!-- STANDINGS -->
+
+        <section>
+            <h2 class="section-title">Division Standings</h2>
+            
+            <div class="standings-grid">
+                
+                <div class="division-card">
+                    <div class="division-header">Grilled to Order</div>
+                    <table class="standings-table">
+                        <thead>
+                            <tr>
+                                <th>Team</th>
+                                <th class="col-w">W</th>
+                                <th class="col-l">L</th>
+                                <th class="col-pf">PF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+							<tr class="playoff"> <!-- class-"playoff"-->
+                                <td class="team-cell">Grube - Maize and Cheese <span class="seed-badge">#2</span></td>
+                                <td class="cell-center">8</td>
+                                <td class="cell-center">6</td>
+                                <td class="cell-right">911.75</td>
+                            </tr>
+
+							<tr><!--<tr class="playoff">-->
+                                <td>Tracy - Snap, Sack, Slayyy</td>
+                                <td class="cell-center">6</td>
+                                <td class="cell-center">8</td>
+                                <td class="cell-right">742.6</td>
+                            </tr>
+
+							<tr><!--<tr class="playoff">-->
+                                <td>Cholka - Stallis Proud</td>
+                                <td class="cell-center">5</td>
+                                <td class="cell-center">9</td>
+                                <td class="cell-right">791.95</td>
+                            </tr>
+
+							<tr><!--<tr class="playoff">-->
+                                <td>Klopp - Motor City Coney Rats</td>
+                                <td class="cell-center">5</td>
+                                <td class="cell-center">9</td>
+                                <td class="cell-right">691.05</td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="division-card">
+                    <div class="division-header">Deli Fresh</div>
+                    <table class="standings-table">
+                        <thead>
+                            <tr>
+                                <th>Team</th>
+                                <th class="col-w">W</th>
+                                <th class="col-l">L</th>
+                                <th class="col-pf">PF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+							<tr class="playoff"><!--<tr class="playoff">-->
+                                <td class="team-cell">Ferguson - Team Ferguson <span class="seed-badge">#3</span></td>
+                                <td class="cell-center">8</td>
+                                <td class="cell-center">2</td>
+                                <td class="cell-right">813.85</td>
+                            </tr>
+							
+							<tr class="playoff">
+                                <td class="team-cell">Laabs - T's Wildcards <span class="seed-badge">#7</span></td>
+                                <td class="cell-center">7</td>
+                                <td class="cell-center">7</td>
+                                <td class="cell-right">832.7</td>
+                            </tr>
+
+							<tr><!--<tr class="playoff">-->
+                                <td>Gogin - All You Need is LOVE</td>
+                                <td class="cell-center">7</td>
+                                <td class="cell-center">7</td>
+                                <td class="cell-right">797.35</td>
+                            </tr>
+
+							<tr><!--<tr class="playoff">-->
+                                <td>Bautch - Jerry's Kids</td>
+                                <td class="cell-center">5</td>
+                                <td class="cell-center">7</td>
+                                <td class="cell-right">724.25</td>
+                            </tr>
+						
+						</tbody>
+                    </table>
+                </div>
+
+                <div class="division-card">
+                    <div class="division-header">Classics</div>
+                    <table class="standings-table">
+                        <thead>
+                            <tr>
+                                <th>Team</th>
+                                <th class="col-w">W</th>
+                                <th class="col-l">L</th>
+                                <th class="col-pf">PF</th>
+                            </tr>
+                        </thead>
+                        <tbody>				
+                            <tr class="playoff"><!--<tr class="playoff">-->
+                                <td class="team-cell">Westhoff - Legoin of Doom <span class="seed-badge">#1</span></td>
+                                <td class="cell-center">9</td>
+                                <td class="cell-center">5</td>
+                                <td class="cell-right">906.35</td>
+                            </tr>
+
+							<tr class="playoff"> <!-- class-"playoff"-->
+                                <td class="team-cell">Prusha - Chop Blockers <span class="seed-badge">#4</span></td>
+                                <td class="cell-center">8</td>
+                                <td class="cell-center">6</td>
+                                <td class="cell-right">919.85</td>
+                            </tr>
+
+							<tr class="playoff"> <!-- class-"playoff"-->
+                                <td class="team-cell">Levetzow - Levetzow <span class="seed-badge">#5</span></td>
+                                <td class="cell-center">8</td>
+                                <td class="cell-center">6</td>
+                                <td class="cell-right">951.9</td>
+                            </tr>
+
+							<tr class="playoff"><!--<tr class="playoff">-->
+                                <td class="team-cell">Somoles - Should I Stay or Shedeur Go <span class="seed-badge">#6</span></td>
+                                <td class="cell-center">8</td>
+                                <td class="cell-center">6</td>
+                                <td class="cell-right">852.8</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

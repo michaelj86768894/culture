@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 	<meta name="robots" content="noindex">
-  <title>2026 Cuzzie Awards</title>
+  <title>Cuzzie Awards</title>
 
 
 	<style>
@@ -503,7 +503,7 @@
 
       <div class="award-card">
         <h4>Office News Award</h4>
-        <p class="award-description">For the person who somehow hears everything through the grapevine first and always stays in the loop on what's happening around the office.</p>
+        <p class="award-description">For the person who someone hears everything through the grapevine first and always stays in the loop on what's happening around the office.</p>
         <div class="drop-zone" data-category="Office News Award"></div>
       </div>
 
@@ -627,6 +627,27 @@
 
 
 <script>
+    // Universal function to update the enabled/disabled state of every person in the sidebar
+    // based on whether their ID currently exists in ANY drop zone.
+    function updateSidebarStates() {
+      const activeAssignedIds = new Set();
+      
+      document.querySelectorAll('.drop-zone').forEach(zone => {
+        if (zone.children.length > 0) {
+          const pid = zone.children[0].dataset.personId;
+          if (pid) activeAssignedIds.add(pid);
+        }
+      });
+
+      document.querySelectorAll('.sidebar .draggable').forEach(item => {
+        if (activeAssignedIds.has(item.id)) {
+          item.classList.add('disabled');
+        } else {
+          item.classList.remove('disabled');
+        }
+      });
+    }
+
     // Setup Drag Events for all original sidebar items
     document.querySelectorAll('.sidebar .draggable').forEach(item => {
       item.addEventListener('dragstart', e => {
@@ -661,8 +682,7 @@
         const originalEl = document.getElementById(personId);
         if (!originalEl) return;
 
-        // 1. Find and clear ANY other drop zone that currently holds this person, 
-        // and remove their filled styling if left empty
+        // 1. Clear ANY other drop zone that currently holds this person
         document.querySelectorAll('.drop-zone').forEach(existingZone => {
           if (existingZone.children.length > 0 && existingZone.children[0].dataset.personId === personId) {
             existingZone.innerHTML = '';
@@ -670,14 +690,8 @@
           }
         });
 
-        // 2. If this target zone already contains a different person, 
-        // completely un-disable that old person in the sidebar and clear the zone
+        // 2. If this target zone already contains someone else, clear it out
         if (zone.children.length > 0) {
-          const oldPersonId = zone.children[0].dataset.personId;
-          const oldOriginalEl = document.getElementById(oldPersonId);
-          if (oldOriginalEl) {
-            oldOriginalEl.classList.remove('disabled');
-          }
           zone.innerHTML = '';
         }
 
@@ -693,8 +707,8 @@
         zone.appendChild(clone);
         zone.classList.add('filled');
 
-        // 4. Ensure the original sidebar item stays disabled/grayed out since they are placed somewhere
-        originalEl.classList.add('disabled');
+        // 4. Recalculate sidebar states across the board
+        updateSidebarStates();
       });
     });
 
@@ -725,11 +739,8 @@
         }
       });
 
-      // Free them up in the sidebar
-      const originalEl = document.getElementById(personId);
-      if (originalEl) {
-        originalEl.classList.remove('disabled');
-      }
+      // Recalculate sidebar states
+      updateSidebarStates();
     });
 
 

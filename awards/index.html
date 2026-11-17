@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 	<meta name="robots" content="noindex">
-  <title>Cuzzie Awards</title>
+  <title>Better U Crew - Cuzzie Awards</title>
 
 
 	<style>
@@ -503,7 +503,7 @@
 
       <div class="award-card">
         <h4>Office News Award</h4>
-        <p class="award-description">For the person who sometimes hears everything through the grapevine first and always stays in the loop on what's happening around the office.</p>
+        <p class="award-description">For the person who somehow hears everything through the grapevine first and always stays in the loop on what's happening around the office.</p>
         <div class="drop-zone" data-category="Office News Award"></div>
       </div>
 
@@ -678,28 +678,31 @@
         const personId = e.dataTransfer.getData('text/plain');
         if (!personId) return;
 
-        // If this zone already contains someone, unassign them first
+        // 1. Find and clear ANY other drop zone that currently holds this person
+        document.querySelectorAll('.drop-zone').forEach(existingZone => {
+          if (existingZone.children.length > 0 && existingZone.children[0].dataset.personId === personId) {
+            existingZone.innerHTML = '';
+            existingZone.classList.remove('filled');
+          }
+        });
+
+        // 2. If this target zone already contains a different person, unassign them first
         if (zone.children.length > 0) {
           const oldPersonId = zone.children[0].dataset.personId;
           unassignPerson(oldPersonId);
           zone.innerHTML = '';
         }
 
-        // Create clone for the award zone
+        // 3. Create clone for the award zone
         const originalEl = document.getElementById(personId);
         if (!originalEl) return;
 
         const clone = originalEl.cloneNode(true);
         clone.dataset.personId = personId;
-        // Make the cloned element inside the award zone draggable too!
         clone.setAttribute('draggable', 'true');
         
-        // Add dragstart handler to the clone so it can be moved elsewhere
         clone.addEventListener('dragstart', ev => {
           ev.dataTransfer.setData('text/plain', personId);
-          
-          // Optional: If dragged from a drop zone, automatically clear that zone upon successful drag
-          // or let the drop targets handle swapping/clearing.
         });
 
         zone.appendChild(clone);

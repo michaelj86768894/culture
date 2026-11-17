@@ -695,10 +695,15 @@
           zone.innerHTML = '';
         }
 
-        // 3. Create clone for the new award zone
-        const clone = originalEl.cloneNode(true);
-        clone.dataset.personId = personId;
-        clone.setAttribute('draggable', 'true');
+// 3. Create clone for the new award zone
+const clone = originalEl.cloneNode(true);
+
+// Remove the disabled styling inherited from the sidebar
+clone.classList.remove('disabled');
+
+clone.dataset.personId = personId;
+clone.setAttribute('draggable', 'true');
+		  
         
         clone.addEventListener('dragstart', ev => {
           ev.dataTransfer.setData('text/plain', personId);
